@@ -1,12 +1,10 @@
 #include "../include/clt.h"
 
 template <class T>
-string prompt<T>::create_prompt(initializer_list<T> list) {
-	string PS1;
-
+prompt<T>::prompt(initializer_list<T> list) {
+	
 	for(auto elem: list) {
 		PS1+=elem;
 	}
 
-	return PS1;
 }

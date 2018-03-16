@@ -10,6 +10,7 @@
 using namespace std;
 
 template <class T>
-struct prompt {
-	string create_prompt(initializer_list<T> list);
+struct prompt{
+	string PS1;
+	prompt(initializer_list<T> list);
 };
