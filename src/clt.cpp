@@ -24,3 +24,25 @@ string get_input(prompt *p) {
 	
 }
 
+envp::envp(char *env[]) {
+	
+	// PATH
+	auto path_var = getenv("PATH");
+	// cout << path_var << endl; return;
+	auto pch = strtok (path_var, ":");
+	while (pch) {
+		PATH.push_back(string(pch));
+		pch = strtok (NULL, ":");
+		// cout << pch << endl;
+	}
+	
+	// PWD
+	PWD = getenv("PWD");
+}
+
+void envp::__list_path() {
+	for(auto it : PATH) {
+		cout << it << endl;
+	}
+}
+
