@@ -13,19 +13,21 @@
 
 using namespace std;
 
-struct prompt{
-	string PS1;
-	prompt(initializer_list<string> list);
-};
+namespace CliTools {
+	struct prompt{
+		string PS1;
+		prompt(initializer_list<string> list);
+	};
 
-struct envp {
-	vector<string> PATH;
-	string PWD;
-	unordered_map <string, string> alias;
-	envp(char *env[]);
-	
-	// Testing Only
-	void __list_path();
-};
+	struct envp {
+		vector<string> PATH;
+		string PWD;
+		unordered_map <string, string> alias; //[TODO]
+		envp(char *env[]);
+		
+		// Testing Only
+		void __list_path();
+	};
 
-string get_input(prompt *p);
+	string get_input(prompt *p);
+}

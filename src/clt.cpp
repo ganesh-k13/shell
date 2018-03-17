@@ -1,6 +1,6 @@
 #include "../include/clt.h"
 
-prompt::prompt(initializer_list<string> list) {
+CliTools::prompt::prompt(initializer_list<string> list) {
 	
 	if(!list.size()) {
 		PS1 = DEFAULT_PS1;
@@ -12,7 +12,7 @@ prompt::prompt(initializer_list<string> list) {
 	}	
 }
 
-string get_input(prompt *p) {
+string CliTools::get_input(prompt *p) {
 	
 	string line;
 	line = readline((p->PS1).c_str());
@@ -24,7 +24,7 @@ string get_input(prompt *p) {
 	
 }
 
-envp::envp(char *env[]) {
+CliTools::envp::envp(char *env[]) {
 	
 	// PATH
 	auto path_var = getenv("PATH");
@@ -40,7 +40,7 @@ envp::envp(char *env[]) {
 	PWD = getenv("PWD");
 }
 
-void envp::__list_path() {
+void CliTools::envp::__list_path() {
 	for(auto it : PATH) {
 		cout << it << endl;
 	}
