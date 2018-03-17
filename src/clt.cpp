@@ -12,3 +12,15 @@ prompt::prompt(initializer_list<string> list) {
 	}	
 }
 
+string get_input(prompt *p) {
+	
+	string line;
+	line = readline((p->PS1).c_str());
+	if(line!=""){
+		add_history(line.c_str());
+	}
+	
+	return line;
+	
+}
+

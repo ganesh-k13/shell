@@ -15,3 +15,5 @@ struct prompt{
 	string PS1;
 	prompt(initializer_list<string> list);
 };
+
+string get_input(prompt *p);
