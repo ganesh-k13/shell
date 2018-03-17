@@ -7,10 +7,11 @@
 #include "readline/readline.h"
 #include "readline/history.h"
 
+#define DEFAULT_PS1 ">>> "
+
 using namespace std;
 
-template <class T>
 struct prompt{
 	string PS1;
-	prompt(initializer_list<T> list);
+	prompt(initializer_list<string> list);
 };

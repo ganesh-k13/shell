@@ -1,10 +1,14 @@
 #include "../include/clt.h"
 
-template <class T>
-prompt<T>::prompt(initializer_list<T> list) {
+prompt::prompt(initializer_list<string> list) {
+	
+	if(!list.size()) {
+		PS1 = DEFAULT_PS1;
+		return;
+	}
 	
 	for(auto elem: list) {
 		PS1+=elem;
-	}
-
+	}	
 }
+
