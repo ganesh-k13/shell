@@ -1,10 +1,15 @@
 #include <iostream>
 #include <string>
+#include <cstring>
 #include <unordered_map>
 #include <vector>
 #include <initializer_list>
 #include <cstdlib>
 #include <cstdio>
+#include <signal.h>
+#include <sys/wait.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 #include "readline/readline.h"
 #include "readline/history.h"
@@ -30,4 +35,12 @@ namespace CliTools {
 	};
 
 	string get_input(prompt *p);
+	
+	void string_to_vect(vector<string> &v, const char *str, char *delim);
+	
+	char **vect_to_cstr(vector<string> argv);
+	int command_handler(vector<string> argv	);
+	bool execute(char** argv);
+	bool execute(char** argv, envp *e);
+	
 }
