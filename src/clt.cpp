@@ -12,6 +12,19 @@ CliTools::prompt::prompt(initializer_list<string> list) {
 	}	
 }
 
+void CliTools::prompt::update(initializer_list<string> list) {
+	
+	PS1.clear();
+	if(!list.size()) {
+		PS1 = DEFAULT_PS1;
+		return;
+	}
+	
+	for(auto elem: list) {
+		PS1+=elem;
+	}	
+}
+
 string CliTools::get_input(prompt *p) {
 	
 	string line;
@@ -68,10 +81,33 @@ bool CliTools::execute(char** argv) {
 
 bool CliTools::execute(char** argv, envp *e) {
 	
-	// for(auto path : e->PATH) {
-		// string abs_path = path+argv[0];
-		// cout << abs_path << endl;
-	// }
+	auto pid = fork();
+	int status;
+	if(pid < 0) {
+		return false;
+	}
+	
+	if(pid==0){
+		// We set the child to ignore SIGINT signals (we want the parent
+		// process to handle them with signalHandler_int)	
+		signal(SIGINT, SIG_IGN);
+		for(auto path : e->PATH) {
+			string abs_path = path+"/"+argv[0];
+			
+			if(execv(abs_path.c_str(), argv) < 0) {
+				continue;
+			}
+		}
+	}
+	
+	else {
+		waitpid(pid, &status, 0);
+		if(status < 0) {
+			return false;
+		}
+		return true;
+	}
+	
 	
 	return true;
 }
@@ -105,12 +141,12 @@ int CliTools::command_handler(vector<string> argv, envp *e) {
 				return 0;
 			}
 		}
-		// else {
-			// char **arg_t = vect_to_cstr(argv);
-			// if(!execute(arg_t, e)) {
-				// return 0;
-			// }
-		// }
+		else {
+			char **arg_t = vect_to_cstr(argv);
+			if(!execute(arg_t, e)) {
+				return 0;
+			}
+		}
 	}
 	return 1;
 }

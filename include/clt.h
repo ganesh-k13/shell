@@ -22,6 +22,7 @@ namespace CliTools {
 	struct prompt{
 		string PS1;
 		prompt(initializer_list<string> list);
+		void update(initializer_list<string> list);
 	};
 
 	struct envp {
