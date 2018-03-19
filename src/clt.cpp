@@ -67,6 +67,12 @@ bool CliTools::execute(char** argv) {
 }
 
 bool CliTools::execute(char** argv, envp *e) {
+	
+	// for(auto path : e->PATH) {
+		// string abs_path = path+argv[0];
+		// cout << abs_path << endl;
+	// }
+	
 	return true;
 }
 
@@ -74,15 +80,17 @@ char** CliTools::vect_to_cstr(vector<string> argv) {
 	char **arg_t = new char*[argv.size()+1];
 	int i = 0;
 	for(auto s : argv) {
-		arg_t[i] = new char[argv[i].length()];
-		strcpy(arg_t[i], argv[i].c_str());
+		arg_t[i] = new char[s.length()];
+		strcpy(arg_t[i], s.c_str());
+		// cout << arg_t[i] << endl;
+		i++;
 	}
 	arg_t[argv.size()] = nullptr;
 	
 	return arg_t;
 }
 
-int CliTools::command_handler(vector<string> argv) {
+int CliTools::command_handler(vector<string> argv, envp *e) {
 	
 	string command = argv[0];
 	
@@ -91,12 +99,18 @@ int CliTools::command_handler(vector<string> argv) {
 	}
 	
 	else {
-		if(command[0] == '.' || command[0] == '/') {
+		if(command[0] == '.') {
 			char **arg_t = vect_to_cstr(argv);
 			if(!execute(arg_t)) {
 				return 0;
 			}
 		}
+		// else {
+			// char **arg_t = vect_to_cstr(argv);
+			// if(!execute(arg_t, e)) {
+				// return 0;
+			// }
+		// }
 	}
 	return 1;
 }
