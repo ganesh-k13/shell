@@ -22,7 +22,8 @@ int main(int argc, char *argv[], char *envp[]) {
 		
 		vector <string> commands;
 		CliTools::string_to_vect(commands, line.c_str(), " ");
-		cout << CliTools::command_handler(commands, &e) << endl;
+		cout << "Error Code: " << CliTools::command_handler(commands, &e) << endl;
+
 		p.update({str2, "@", e.PWD, "$ "});
 	}
 	

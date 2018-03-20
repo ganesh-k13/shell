@@ -53,11 +53,11 @@ void CliTools::envp::__list_path() {
 	}
 }
 
-bool CliTools::execute(char** argv) {
+int CliTools::execute(char** argv) {
 	auto pid = fork();
-	int status;
+	int status = -1;
 	if(pid < 0) {
-		return false;
+		return status;
 	}
 	
 	if(pid==0){
@@ -71,20 +71,17 @@ bool CliTools::execute(char** argv) {
 	
 	else {
 		waitpid(pid, &status, 0);
-		if(status < 0) {
-			return false;
-		}
-		return true;
+		return status;
 	}
 	
 }
 
-bool CliTools::execute(char** argv, envp *e) {
+int CliTools::execute(char** argv, envp *e) {
 	
 	auto pid = fork();
-	int status;
+	int status = -1;
 	if(pid < 0) {
-		return false;
+		return status;
 	}
 	
 	if(pid==0){
@@ -99,17 +96,16 @@ bool CliTools::execute(char** argv, envp *e) {
 			}
 		}
 	}
-	
+
 	else {
 		waitpid(pid, &status, 0);
-		if(status < 0) {
-			return false;
+		// cout << "Exec: " << status << endl;
+		if(status != 0) {
+			return status;
 		}
-		return true;
+		return status;
 	}
 	
-	
-	return true;
 }
 
 char** CliTools::vect_to_cstr(vector<string> argv) {
@@ -137,15 +133,12 @@ int CliTools::command_handler(vector<string> argv, envp *e) {
 	else {
 		if(command[0] == '.') {
 			char **arg_t = vect_to_cstr(argv);
-			if(!execute(arg_t)) {
-				return 0;
-			}
+			return execute(arg_t);
+			
 		}
 		else {
 			char **arg_t = vect_to_cstr(argv);
-			if(!execute(arg_t, e)) {
-				return 0;
-			}
+			return execute(arg_t, e);
 		}
 	}
 	return 1;

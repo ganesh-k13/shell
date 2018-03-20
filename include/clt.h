@@ -41,7 +41,7 @@ namespace CliTools {
 	
 	char **vect_to_cstr(vector<string> argv);
 	int command_handler(vector<string> argv, envp *e);
-	bool execute(char** argv);
-	bool execute(char** argv, envp *e);
+	int execute(char** argv);
+	int execute(char** argv, envp *e);
 	
 }
