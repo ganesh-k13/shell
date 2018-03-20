@@ -43,5 +43,6 @@ namespace CliTools {
 	int command_handler(vector<string> argv, envp *e);
 	int execute(char** argv);
 	int execute(char** argv, envp *e);
+	bool change_dir(string dir);
 	
 }

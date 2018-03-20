@@ -5,8 +5,9 @@ int main(int argc, char *argv[], char *envp[]) {
 	CliTools::envp e(envp);
 	
 	string str2 = (getenv("USER"));
-	string str1 = e.PWD;
-	CliTools::prompt p = {str2, "@", str1, "$ "};
+	string str1 = (getenv("PWD"));
+	string str3 = (getenv("LOGNAME"));
+	CliTools::prompt p = {str2, "@", (getenv("PWD")), "$ "};
 	cout << p.PS1 << endl;
 	
 	e.__list_path();
@@ -24,7 +25,7 @@ int main(int argc, char *argv[], char *envp[]) {
 		CliTools::string_to_vect(commands, line.c_str(), " ");
 		cout << "Error Code: " << CliTools::command_handler(commands, &e) << endl;
 
-		p.update({str2, "@", e.PWD, "$ "});
+		p.update({str2, "@", (getenv("PWD")), "$ "});
 	}
 	
 	cout << "SUCCESS!!!!" << endl;

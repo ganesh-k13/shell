@@ -43,8 +43,6 @@ CliTools::envp::envp(char *env[]) {
 	auto path_var = getenv("PATH");
 	string_to_vect(PATH, path_var, ":");
 	
-	// PWD
-	PWD = getenv("PWD");
 }
 
 void CliTools::envp::__list_path() {
@@ -122,6 +120,19 @@ char** CliTools::vect_to_cstr(vector<string> argv) {
 	return arg_t;
 }
 
+bool CliTools::change_dir(string dir) {
+
+	if(chdir(dir.c_str()) < 0) {
+		return true;
+	}
+
+	if(setenv("PWD", getcwd(NULL, 0), 1) < 0) {
+		return true;
+	}
+
+	return false;
+}
+
 int CliTools::command_handler(vector<string> argv, envp *e) {
 	
 	string command = argv[0];
@@ -131,6 +142,11 @@ int CliTools::command_handler(vector<string> argv, envp *e) {
 	}
 	
 	else {
+
+		if(command == "cd") {
+			return (int)change_dir(argv[1]);
+		}
+
 		if(command[0] == '.') {
 			char **arg_t = vect_to_cstr(argv);
 			return execute(arg_t);
