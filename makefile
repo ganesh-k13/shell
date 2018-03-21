@@ -14,15 +14,18 @@ SRCDIR=src
 LDIR=lib
 CPPFLAGS=-lreadline
 
-test:	$(ODIR)/test.o $(ODIR)/clt.o
-		$(CC) -std=c++11 -o test -g $(ODIR)/test.o $(ODIR)/clt.o $(CPPFLAGS)
+test:	$(ODIR)/test.o $(ODIR)/clt.o $(ODIR)/utils.o
+		$(CC) -std=c++11 -o test -g $(ODIR)/test.o $(ODIR)/clt.o $(ODIR)/utils.o $(CPPFLAGS)
 
-$(ODIR)/test.o:	test.cpp 
+$(ODIR)/test.o:	test.cpp
 	$(CC) -std=c++11 -w -o $(ODIR)/test.o -c test.cpp $(CPPFLAGS)
 
 $(ODIR)/clt.o:	$(SRCDIR)/clt.cpp $(IDIR)/clt.h
 	$(CC) -std=c++11 -w -o $(ODIR)/clt.o -c $(SRCDIR)/clt.cpp $(CPPFLAGS)
-	
+
+$(ODIR)/utils.o:	$(SRCDIR)/utils.cpp $(IDIR)/utils.h
+	$(CC) -std=c++11 -w -o $(ODIR)/utils.o -c $(SRCDIR)/utils.cpp
+
 clean:
 	rm -f $(ODIR)/*.o
 	rm test
