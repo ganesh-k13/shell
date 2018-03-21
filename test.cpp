@@ -3,6 +3,7 @@
 
 int main(int argc, char *argv[], char *envp[]) {
 	
+	init();
 	setenv("SHELL", "test", 1);
 	CliTools::envp e(envp);
 	
@@ -10,9 +11,10 @@ int main(int argc, char *argv[], char *envp[]) {
 	string str1 = (getenv("PWD"));
 	string str3 = (getenv("LOGNAME"));
 	CliTools::prompt p = {str2, "@", (getenv("PWD")), "$ "};
-	cout << p.PS1 << endl;
+	// cout << p.PS1 << endl;
 	
-	e.__list_path();
+	// e.__list_path();
+	cout << welcome();
 	while(1) {
 		string line;
 		if((line = get_input(&p)) == "exit") {
