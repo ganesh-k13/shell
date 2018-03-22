@@ -35,10 +35,12 @@ extern pid_t pid;
 
 string error_code_handle(int code);
 string welcome();
+
+#if 0
 void init();
 // signal handler for SIGCHLD */
 void signalHandler_child(int p);
 // signal handler for SIGINT
 void signalHandler_int(int p);
-
+#endif
 #endif

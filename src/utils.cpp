@@ -3,8 +3,8 @@
 string error_code_handle(int code) {
 	switch(code) {
 		case 0: {return "";}
-		case 132: {return "Invalid Command!";}
-		case 512: {return "Invalid Usage!";}
+		case 132: {return "Invalid Command!\n";}
+		case 512: {return "Invalid Usage!\n";}
 	}
 }
 
@@ -23,6 +23,7 @@ string welcome() {
 	return out.str();
 } 
 
+#if 0
 void init(){
 
 	// See if we are running interactively
@@ -95,3 +96,4 @@ void signalHandler_int(int p){
 		printf("\n");
 	}
 }
+#endif

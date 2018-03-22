@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[], char *envp[]) {
 	
-	init();
+	// init();
 	setenv("SHELL", "test", 1);
 	CliTools::envp e(envp);
 	
@@ -27,7 +27,7 @@ int main(int argc, char *argv[], char *envp[]) {
 		
 		vector <string> commands;
 		CliTools::string_to_vect(commands, line.c_str(), " ");
-		cout << error_code_handle(CliTools::command_handler(commands, &e)) << endl;
+		cout << error_code_handle(CliTools::command_handler(commands, &e));
 
 		p.update({str2, "@", (getenv("PWD")), "$ "});
 	}

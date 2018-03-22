@@ -1,5 +1,9 @@
 #include <iostream>
+#include <iomanip>
+#include <sstream>
 #include <string>
+#include <utility>
+#include <map>
 #include <cstring>
 #include <unordered_map>
 #include <vector>
@@ -19,6 +23,10 @@
 using namespace std;
 
 namespace CliTools {
+
+	extern vector <vector<string>> history;
+	extern vector<string> header;
+
 	struct prompt{
 		string PS1;
 		prompt(initializer_list<string> list);
@@ -44,5 +52,6 @@ namespace CliTools {
 	int execute(char** argv);
 	int execute(char** argv, envp *e);
 	bool change_dir(string dir);
+	void print_history();
 	
 }

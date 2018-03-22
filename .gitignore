@@ -33,3 +33,5 @@
 
 # Other
 tmp/
+obj/
+test

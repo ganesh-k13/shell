@@ -1,5 +1,8 @@
 #include "../include/clt.h"
 
+vector <vector<string>> CliTools::history;
+vector<string> CliTools::header = {"Command", "PID"};
+
 CliTools::prompt::prompt(initializer_list<string> list) {
 	
 	if(!list.size()) {
@@ -59,6 +62,7 @@ int CliTools::execute(char** argv) {
 	}
 	
 	if(pid==0){
+		
 		// We set the child to ignore SIGINT signals (we want the parent
 		// process to handle them with signalHandler_int)	
 		signal(SIGINT, SIG_IGN);
@@ -68,6 +72,9 @@ int CliTools::execute(char** argv) {
 	}
 	
 	else {
+		vector<string> v = {string(argv[0]), to_string(pid)};
+		history.push_back(v);
+		
 		waitpid(pid, &status, 0);
 		return status;
 	}
@@ -96,9 +103,12 @@ int CliTools::execute(char** argv, envp *e) {
 	}
 
 	else {
+		vector<string> v = {string(argv[0]), to_string(pid)};
+		history.push_back(v);
 		waitpid(pid, &status, 0);
 		// cout << "Exec: " << status << endl;
 		if(status != 0) {
+
 			return status;
 		}
 		return status;
@@ -133,6 +143,43 @@ bool CliTools::change_dir(string dir) {
 	return false;
 }
 
+void CliTools::print_history() {
+
+	stringstream  seperator;
+	stringstream  table_headings;
+	stringstream  data;
+	stringstream  table;
+	
+	const int atrribute_width = 8;
+	
+	// cols = (*relation)->get_col_names().begin();
+	
+	for(auto cols : header) {
+		seperator << setfill('-') << setw(1) << "+" << setw(atrribute_width) << "-";
+	}
+	seperator << setw(1) << "+" << endl << setfill(' ') << setw(1);
+	
+	table << seperator.str();
+	
+	for(auto cols : header) {
+		table_headings << "|" << setw(atrribute_width) << left << (cols) << setw(1) ;
+	}
+	
+	table_headings << setw(1) << "|" << endl;
+	
+	table << table_headings.str();
+	table << seperator.str();
+
+	for(auto it: history) {
+		for(auto c : it)
+			table << "|" << setw(atrribute_width) << left << c << setw(1) ;
+		table << setw(1) << "|" << endl << seperator.str();
+	}
+	cout << table.str();
+
+	// cout << history.size() << endl;
+}
+
 int CliTools::command_handler(vector<string> argv, envp *e) {
 	
 	string command = argv[0];
@@ -145,6 +192,11 @@ int CliTools::command_handler(vector<string> argv, envp *e) {
 
 		if(command == "cd") {
 			return (int)change_dir(argv[1]);
+		}
+
+		if(command == "history") {
+			print_history();
+			return 0;
 		}
 
 		if(command[0] == '.') {
