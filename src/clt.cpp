@@ -191,9 +191,14 @@ int CliTools::command_handler(vector<string> argv, envp *e) {
 	else {
 		
 		for(auto chr : argv) {
+			
 			if(chr == "|") {
 				char **arg_t = vect_to_cstr(argv);
 				pipeHandler(arg_t); return 0;
+			}
+			
+			if(chr == "<" || chr == ">") {
+				redirectionHandler(argv); return 0;
 			}
 		}
 		
@@ -342,5 +347,115 @@ void CliTools::pipeHandler(char * args[]){
 		waitpid(pid,NULL,0);
 				
 		i++;	
+	}
+}
+
+void CliTools::fileIO(char * args[], string in_file, string out_file) {
+	int err = -1;
+	
+	int fileDescriptor; // between 0 and 19, describing the output or input file
+	
+	int pid;
+	
+	if((pid=fork())==-1){
+		printf("Child process could not be created\n");
+		return;
+	}
+	if(pid==0){
+		// We open file for read only (it's STDIN)
+		fileDescriptor = open(in_file.c_str(), O_RDONLY, 0600);  
+		// We replace de standard input with the appropriate file
+		dup2(fileDescriptor, STDIN_FILENO);
+		close(fileDescriptor);
+		// Same as before for the output file
+		fileDescriptor = open(out_file.c_str(), O_CREAT | O_TRUNC | O_WRONLY, 0600);
+		dup2(fileDescriptor, STDOUT_FILENO);
+		close(fileDescriptor);		 
+	
+		if (execvp(args[0],args)==err){
+			printf("err");
+			kill(getpid(),SIGTERM);
+		}		 
+	}
+	waitpid(pid,NULL,0);
+}
+void CliTools::fileIO(char * args[], string file, bool isOut) {
+	 
+	int err = -1;
+	
+	int fileDescriptor; // between 0 and 19, describing the output or input file
+	
+	int pid;
+	
+	if((pid=fork())==-1){
+		printf("Child process could not be created\n");
+		return;
+	}
+	if(pid==0){
+		// Option 0: output redirection
+		if (isOut){
+			// We open (create) the file truncating it at 0, for write only
+			fileDescriptor = open(file.c_str(), O_CREAT | O_TRUNC | O_WRONLY, 0600); 
+			// We replace de standard output with the appropriate file
+			dup2(fileDescriptor, STDOUT_FILENO); 
+			close(fileDescriptor);
+		// Option 1: input and output redirection
+		}else{
+			// We open file for read only (it's STDIN)
+			fileDescriptor = open(file.c_str(), O_RDONLY, 0600);  
+			// We replace de standard input with the appropriate file
+			dup2(fileDescriptor, STDIN_FILENO);
+			close(fileDescriptor);		 
+		}
+		 
+		if (execvp(args[0],args)==err){
+			printf("err");
+			kill(getpid(),SIGTERM);
+		}		 
+	}
+	waitpid(pid,NULL,0);
+}
+
+int CliTools::redirectionHandler(vector<string> argv) {
+	vector <string> command;
+	auto it = argv.begin();
+	
+	while(it != argv.end()) {
+		// cout << *it << "";
+		command.push_back(*it); it++;		
+		if(*it == "<" || *it == ">") {
+			break;
+		}
+	}
+	
+	char **arg_t = vect_to_cstr(command);
+	
+	string in_file = "", out_file = "";
+	
+	while(it != argv.end()) {
+		if(*it == "<") {
+			in_file = *(++it);
+		}
+		
+		if(*it == ">") {
+			out_file = *(++it);
+		}
+		
+		it++;
+	}
+	
+	if(in_file != "" and out_file != "") {
+		fileIO(arg_t, in_file, out_file);
+		return 0;
+	}
+	
+	if(out_file != "") {
+		fileIO(arg_t, out_file, true);
+		return 0;
+	}
+	
+	else {
+		fileIO(arg_t, in_file, false);
+		return 0;
 	}
 }

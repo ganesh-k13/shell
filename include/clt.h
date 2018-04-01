@@ -54,5 +54,8 @@ namespace CliTools {
 	bool change_dir(string dir);
 	void print_history();
 	void pipeHandler(char * args[]);
+	void fileIO(char * args[], string in_file, string out_file);
+	void fileIO(char * args[], string file, bool isOut);
+	int redirectionHandler(vector<string> argv);
 	
 }
