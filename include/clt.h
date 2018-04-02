@@ -57,5 +57,6 @@ namespace CliTools {
 	void fileIO(char * args[], string in_file, string out_file);
 	void fileIO(char * args[], string file, bool isOut);
 	int redirectionHandler(vector<string> argv);
-	
+	int create_alias(vector<string> argv, envp *e);
+	int check_alias(vector<string> argv, envp *e);
 }

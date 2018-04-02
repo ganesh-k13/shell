@@ -7,10 +7,10 @@ int main(int argc, char *argv[], char *envp[]) {
 	setenv("SHELL", "test", 1);
 	CliTools::envp e(envp);
 	
-	string str2 = (getenv("USER"));
+	string str2 = "\033[0;32m"+string(getenv("USER"))+"\033[0m";
 	string str1 = (getenv("PWD"));
 	string str3 = (getenv("LOGNAME"));
-	CliTools::prompt p = {str2, "@", (getenv("PWD")), "$ "};
+	CliTools::prompt p = {str2, "@", "\033[0;31m"+string(getenv("PWD"))+"\033[0m", "$ "};
 	// cout << p.PS1 << endl;
 	
 	// e.__list_path();
@@ -29,7 +29,7 @@ int main(int argc, char *argv[], char *envp[]) {
 		CliTools::string_to_vect(commands, line.c_str(), " ");
 		cout << error_code_handle(CliTools::command_handler(commands, &e));
 
-		p.update({str2, "@", (getenv("PWD")), "$ "});
+		p.update({str2, "@", "\033[0;31m"+string(getenv("PWD"))+"\033[0m", "$ "});
 	}
 	
 	cout << "SUCCESS!!!!" << endl;

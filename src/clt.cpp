@@ -210,7 +210,15 @@ int CliTools::command_handler(vector<string> argv, envp *e) {
 			print_history();
 			return 0;
 		}
-
+		
+		if(command == "alias") {
+			create_alias(argv, e); return 0;
+		}
+		
+		if(!check_alias(argv, e)) {
+			return 0;
+		}
+		
 		if(command[0] == '.') {
 			char **arg_t = vect_to_cstr(argv);
 			return execute(arg_t);
@@ -222,6 +230,24 @@ int CliTools::command_handler(vector<string> argv, envp *e) {
 		}
 	}
 	return 1;
+}
+
+int CliTools::check_alias(vector<string> argv, envp *e) {
+	
+	for(auto it : e->alias) {
+		
+		if(it.first == argv[0]) {
+			vector<string> command;
+			// cout << it.second << endl;
+			string_to_vect(command, it.second.c_str(), " ");
+			char **arg_t = vect_to_cstr(command);
+			// cout << arg_t[0] << endl;
+			return execute(arg_t, e);
+		}
+	}
+	
+	return 1;
+	
 }
 
 void CliTools::string_to_vect(vector<string> &v, const char *str, char *delim) {
@@ -358,7 +384,7 @@ void CliTools::fileIO(char * args[], string in_file, string out_file) {
 	int pid;
 	
 	if((pid=fork())==-1){
-		printf("Child process could not be created\n");
+		cout << ("Child process could not be created\n");
 		return;
 	}
 	if(pid==0){
@@ -373,7 +399,7 @@ void CliTools::fileIO(char * args[], string in_file, string out_file) {
 		close(fileDescriptor);		 
 	
 		if (execvp(args[0],args)==err){
-			printf("err");
+			cout << ("err");
 			kill(getpid(),SIGTERM);
 		}		 
 	}
@@ -388,7 +414,7 @@ void CliTools::fileIO(char * args[], string file, bool isOut) {
 	int pid;
 	
 	if((pid=fork())==-1){
-		printf("Child process could not be created\n");
+		cout << ("Child process could not be created\n");
 		return;
 	}
 	if(pid==0){
@@ -409,7 +435,7 @@ void CliTools::fileIO(char * args[], string file, bool isOut) {
 		}
 		 
 		if (execvp(args[0],args)==err){
-			printf("err");
+			cout << ("err");
 			kill(getpid(),SIGTERM);
 		}		 
 	}
@@ -458,4 +484,15 @@ int CliTools::redirectionHandler(vector<string> argv) {
 		fileIO(arg_t, in_file, false);
 		return 0;
 	}
+}
+
+int CliTools::create_alias(vector<string> argv, envp *e) {
+	
+	string command = "", alias = argv[1];
+	for(auto it = argv.begin()+3; it != argv.end(); it++) {
+		command = command + (*it) + " ";
+	}
+	e->alias[alias] = command;
+	
+	return 0;
 }
