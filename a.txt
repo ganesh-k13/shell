@@ -1,0 +1,14 @@
+a.txt
+include
+n.txt
+io
+makefile
+NotePal
+obj
+out
+out.txt
+read
+sr
+test
+test.cpp
+tmp

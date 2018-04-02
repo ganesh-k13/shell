@@ -14,6 +14,7 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <python2.7/Python.h>
 
 #include "readline/readline.h"
 #include "readline/history.h"
@@ -59,4 +60,5 @@ namespace CliTools {
 	int redirectionHandler(vector<string> argv);
 	int create_alias(vector<string> argv, envp *e);
 	int check_alias(vector<string> argv, envp *e);
+	int open_editor(vector<string> argv);
 }

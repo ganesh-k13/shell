@@ -215,6 +215,10 @@ int CliTools::command_handler(vector<string> argv, envp *e) {
 			create_alias(argv, e); return 0;
 		}
 		
+		if(command == "edit") {
+			return open_editor(argv);
+		}
+		
 		if(!check_alias(argv, e)) {
 			return 0;
 		}
@@ -230,6 +234,23 @@ int CliTools::command_handler(vector<string> argv, envp *e) {
 		}
 	}
 	return 1;
+}
+
+int CliTools::open_editor(vector<string> argv) {
+	
+	char **arg_t = vect_to_cstr(argv);
+	strcpy(arg_t[0], "edit.py");
+	FILE* file;
+    int argc = 2;
+	
+	Py_SetProgramName(arg_t[0]);
+    Py_Initialize();
+    PySys_SetArgv(argc, arg_t);
+    file = fopen(arg_t[0], "r");
+    PyRun_SimpleFile(file, arg_t[0]);
+    Py_Finalize();
+	
+	return 0;
 }
 
 int CliTools::check_alias(vector<string> argv, envp *e) {
