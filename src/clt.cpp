@@ -246,7 +246,7 @@ int CliTools::open_editor(vector<string> argv) {
 	Py_SetProgramName(arg_t[0]);
     Py_Initialize();
     PySys_SetArgv(argc, arg_t);
-    file = fopen(arg_t[0], "r");
+    file = fopen(arg_t[0],"r");
     PyRun_SimpleFile(file, arg_t[0]);
     Py_Finalize();
 	
@@ -333,7 +333,8 @@ void CliTools::pipeHandler(char * args[]){
 		}
 		
 		pid=fork();
-		
+		vector<string> v = {string(command[0]), to_string(pid)};
+		history.push_back(v);
 		if(pid==-1){			
 			if (i != num_cmds - 1){
 				if (i % 2 != 0){
@@ -398,6 +399,7 @@ void CliTools::pipeHandler(char * args[]){
 }
 
 void CliTools::fileIO(char * args[], string in_file, string out_file) {
+	
 	int err = -1;
 	
 	int fileDescriptor; // between 0 and 19, describing the output or input file
@@ -408,7 +410,11 @@ void CliTools::fileIO(char * args[], string in_file, string out_file) {
 		cout << ("Child process could not be created\n");
 		return;
 	}
+	vector<string> v = {string(args[0]), to_string(pid)};
+	history.push_back(v);
+	
 	if(pid==0){
+		
 		// We open file for read only (it's STDIN)
 		fileDescriptor = open(in_file.c_str(), O_RDONLY, 0600);  
 		// We replace de standard input with the appropriate file
@@ -426,6 +432,7 @@ void CliTools::fileIO(char * args[], string in_file, string out_file) {
 	}
 	waitpid(pid,NULL,0);
 }
+
 void CliTools::fileIO(char * args[], string file, bool isOut) {
 	 
 	int err = -1;
@@ -438,19 +445,22 @@ void CliTools::fileIO(char * args[], string file, bool isOut) {
 		cout << ("Child process could not be created\n");
 		return;
 	}
+	vector<string> v = {string(args[0]), to_string(pid)};
+	history.push_back(v);
 	if(pid==0){
+		
 		// Option 0: output redirection
 		if (isOut){
 			// We open (create) the file truncating it at 0, for write only
 			fileDescriptor = open(file.c_str(), O_CREAT | O_TRUNC | O_WRONLY, 0600); 
-			// We replace de standard output with the appropriate file
+			// We replace the standard output with the appropriate file
 			dup2(fileDescriptor, STDOUT_FILENO); 
 			close(fileDescriptor);
 		// Option 1: input and output redirection
 		}else{
 			// We open file for read only (it's STDIN)
 			fileDescriptor = open(file.c_str(), O_RDONLY, 0600);  
-			// We replace de standard input with the appropriate file
+			// We replace the standard input with the appropriate file
 			dup2(fileDescriptor, STDIN_FILENO);
 			close(fileDescriptor);		 
 		}
@@ -464,6 +474,7 @@ void CliTools::fileIO(char * args[], string file, bool isOut) {
 }
 
 int CliTools::redirectionHandler(vector<string> argv) {
+	
 	vector <string> command;
 	auto it = argv.begin();
 	
