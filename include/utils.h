@@ -24,7 +24,7 @@ static struct termios GBSH_TMODES;
 
 static char* currentDirectory;
 extern char** environ;
-extern 
+// extern 
 extern struct sigaction act_child;
 extern struct sigaction act_int;
 
