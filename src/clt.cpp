@@ -417,7 +417,6 @@ void CliTools::fileIO(char * args[], string in_file, string out_file) {
 		
 		// We open file for read only (it's STDIN)
 		fileDescriptor = open(in_file.c_str(), O_RDONLY, 0600);  
-		// We replace de standard input with the appropriate file
 		dup2(fileDescriptor, STDIN_FILENO);
 		close(fileDescriptor);
 		// Same as before for the output file

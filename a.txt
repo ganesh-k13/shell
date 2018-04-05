@@ -1,9 +1,0 @@
-a.txt
-edit.py
-include
-makefile
-obj
-src
-test
-test.cpp
-tmp
