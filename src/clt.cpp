@@ -1,4 +1,5 @@
 #include "../include/clt.h"
+#include "../include/utils.h"
 
 vector <vector<string>> CliTools::history;
 vector<string> CliTools::header = {"Command", "PID"};
@@ -208,6 +209,11 @@ int CliTools::command_handler(vector<string> argv, envp *e) {
 
 		if(command == "history") {
 			print_history();
+			return 0;
+		}
+		
+		if(command == "sgown") {
+			print_sgown(sgown(argv[2], argv[1]));
 			return 0;
 		}
 		

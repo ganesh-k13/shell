@@ -23,20 +23,28 @@ string welcome() {
 	return out.str();
 } 
 
-vector< pair<long, string> > search_file(string file_name, string query) {
+vector<pair<long, string>> search_file(string file_name, string query) {
 	ifstream fileInput;
 	int offset;
 	int cur_line = 0;
 	string line;
 	fileInput.open(file_name.c_str());
-	vector< pair<long, string> > result;
+	vector<pair<long, string>> result;
 	
 	if(fileInput.is_open()) {
 		while(!fileInput.eof()) {
 			getline(fileInput, line);
 			cur_line++;
 			if ((offset = line.find(query, 0)) != string::npos) {
-				result.push_back(make_pair(cur_line, line)); // .substr(offset-20, 40))
+				try {
+					result.push_back(make_pair(cur_line, line.insert(offset+query.length(), "\e[0m").insert(offset, "\e[31m").substr(offset-20, 80))); // .substr(offset-20, 40))
+				}
+				catch(...) {
+					result.push_back(make_pair(cur_line, line.insert(offset+query.length(), "\e[0m").insert(offset, "\e[31m").substr(offset, 80))); // .substr(offset-20, 40))
+				}
+				// catch(const char *msg) {
+					// result.push_back(make_pair(cur_line, line.insert(offset+query.length(), "\033[0m").insert(offset, "\033[0;31m")));
+				// }
 			}
 		}
 		fileInput.close();
@@ -57,6 +65,15 @@ unordered_map <string, vector< pair<long, string> >> sgown(string folder, string
 	}
 	
 	return result;
+}
+
+void print_sgown(unordered_map <string, vector< pair<long, string> >> result) {
+	for(auto res: result) {
+		cout << endl << ("\e[95m" + res.first + "\e[0m") << endl;
+		for(auto it: res.second) {
+			cout << it.first << " " << ("..." + it.second)<< endl;
+		}
+	}
 }
 
 #if 0
