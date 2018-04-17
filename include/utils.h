@@ -1,7 +1,9 @@
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include <string>
 #include <cstring>
+#include <vector>
 #include <sstream>
 #include <signal.h>
 #include <cstdio>
@@ -32,9 +34,10 @@ extern int no_reprint_prmpt;
 
 extern pid_t pid;
 
-
 string error_code_handle(int code);
 string welcome();
+
+vector< pair<long, string> > sgown(string file_name, string query);
 
 #if 0
 void init();

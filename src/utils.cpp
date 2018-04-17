@@ -23,6 +23,28 @@ string welcome() {
 	return out.str();
 } 
 
+vector< pair<long, string> > sgown(string file_name, string query) {
+	ifstream fileInput;
+	int offset;
+	int cur_line = 0;
+	string line;
+	fileInput.open(file_name.c_str());
+	vector< pair<long, string> > result;
+	
+	if(fileInput.is_open()) {
+		while(!fileInput.eof()) {
+			getline(fileInput, line);
+			cur_line++;
+			if ((offset = line.find(query, 0)) != string::npos) {
+				result.push_back(make_pair(cur_line, line)); // .substr(offset-20, 40))
+			}
+		}
+		fileInput.close();
+		return result;
+	}
+	else return {};
+}
+
 #if 0
 void init(){
 

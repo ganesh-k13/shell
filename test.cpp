@@ -1,11 +1,13 @@
 #include "include/clt.h"
 #include "include/utils.h"
 
-int main(int argc, char *argv[], char *envp[]) {
+extern char **environ;
+
+void test_run() {
 	
 	// init();
 	setenv("SHELL", "test", 1);
-	CliTools::envp e(envp);
+	CliTools::envp e(environ);
 	
 	string str2 = "\033[0;32m"+string(getenv("USER"))+"\033[0m";
 	string str1 = (getenv("PWD"));
@@ -33,4 +35,35 @@ int main(int argc, char *argv[], char *envp[]) {
 	}
 	
 	cout << "SUCCESS!!!!" << endl;
+}
+
+void test_sandbox() {
+	
+	for(auto it: sgown("tmp/AesopTales.txt", "cat")) {
+		cout << it.first << " " << it.second << endl;
+	}
+}
+
+void run_tests(char** args, int no_of_args) {
+    int i = 0;
+	if(no_of_args > 0) {
+		string mode(args[0]);
+		
+		if(mode == "-r") {
+			test_run();
+		}
+
+		if(mode == "-s") {
+			test_sandbox();
+		}
+		
+	}
+
+}
+
+int main(int argl, char** argv) {
+    
+    run_tests(argv + 1, argl - 1);
+    
+    return 0;
 }
