@@ -39,9 +39,15 @@ void test_run() {
 
 void test_sandbox() {
 	
-	for(auto it: sgown("tmp/AesopTales.txt", "cat")) {
-		cout << it.first << " " << it.second << endl;
+	for(auto res: sgown("./tmp", "cat")) {
+		cout << endl << res.first << endl;
+		for(auto it: res.second) {
+			cout << it.first << " " << it.second << endl;
+		}
 	}
+	// for(auto it: search_file("tmp/AesopTales.txt", "cat")) {
+		// cout << it.first << " " << it.second << endl;
+	// }
 }
 
 void run_tests(char** args, int no_of_args) {

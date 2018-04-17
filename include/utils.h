@@ -4,6 +4,7 @@
 #include <string>
 #include <cstring>
 #include <vector>
+#include <unordered_map>
 #include <sstream>
 #include <signal.h>
 #include <cstdio>
@@ -15,7 +16,10 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <termios.h>
+#include <experimental/filesystem>
+
 using namespace std;
+namespace fs = experimental::filesystem;
 
 #ifndef UTILS
 #define UTILS
@@ -37,8 +41,8 @@ extern pid_t pid;
 string error_code_handle(int code);
 string welcome();
 
-vector< pair<long, string> > sgown(string file_name, string query);
-
+vector< pair<long, string> > search_file(string file_name, string query);
+unordered_map <string, vector< pair<long, string> >> sgown(string folder, string query);
 #if 0
 void init();
 // signal handler for SIGCHLD */

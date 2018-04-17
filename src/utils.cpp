@@ -23,7 +23,7 @@ string welcome() {
 	return out.str();
 } 
 
-vector< pair<long, string> > sgown(string file_name, string query) {
+vector< pair<long, string> > search_file(string file_name, string query) {
 	ifstream fileInput;
 	int offset;
 	int cur_line = 0;
@@ -43,6 +43,20 @@ vector< pair<long, string> > sgown(string file_name, string query) {
 		return result;
 	}
 	else return {};
+}
+
+unordered_map <string, vector< pair<long, string> >> sgown(string folder, string query) {
+	
+	unordered_map <string, vector< pair<long, string> >> result;
+	
+	for (fs::recursive_directory_iterator i(folder), end; i != end; ++i)  {
+		if (fs::is_regular_file(i->path())) {
+			auto search_res = search_file(string(i->path()), query);
+			result.insert({string(i->path()), search_res});
+		}
+	}
+	
+	return result;
 }
 
 #if 0
