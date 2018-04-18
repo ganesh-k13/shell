@@ -2,7 +2,7 @@
 #include "../include/utils.h"
 
 vector <vector<string>> CliTools::history;
-vector<string> CliTools::header = {"Command", "PID"};
+vector<string> CliTools::header = {"Command", "PID", "Time"};
 
 CliTools::prompt::prompt(initializer_list<string> list) {
 	
@@ -73,7 +73,7 @@ int CliTools::execute(char** argv) {
 	}
 	
 	else {
-		vector<string> v = {string(argv[0]), to_string(pid)};
+		vector<string> v = {string(argv[0]), to_string(pid), get_time()};
 		history.push_back(v);
 		
 		waitpid(pid, &status, 0);
@@ -104,7 +104,7 @@ int CliTools::execute(char** argv, envp *e) {
 	}
 
 	else {
-		vector<string> v = {string(argv[0]), to_string(pid)};
+		vector<string> v = {string(argv[0]), to_string(pid), (get_time())};
 		history.push_back(v);
 		waitpid(pid, &status, 0);
 		// cout << "Exec: " << status << endl;
@@ -151,7 +151,7 @@ void CliTools::print_history() {
 	stringstream  data;
 	stringstream  table;
 	
-	const int atrribute_width = 8;
+	const int atrribute_width = 25;
 	
 	// cols = (*relation)->get_col_names().begin();
 	
@@ -223,6 +223,7 @@ int CliTools::command_handler(vector<string> argv, envp *e) {
 		
 		if(command == "edit") {
 			return open_editor(argv);
+			return 0;
 		}
 		
 		if(!check_alias(argv, e)) {
@@ -339,7 +340,7 @@ void CliTools::pipeHandler(char * args[]){
 		}
 		
 		pid=fork();
-		vector<string> v = {string(command[0]), to_string(pid)};
+		vector<string> v = {string(command[0]), to_string(pid), (get_time())};
 		history.push_back(v);
 		if(pid==-1){			
 			if (i != num_cmds - 1){
@@ -416,7 +417,7 @@ void CliTools::fileIO(char * args[], string in_file, string out_file) {
 		cout << ("Child process could not be created\n");
 		return;
 	}
-	vector<string> v = {string(args[0]), to_string(pid)};
+	vector<string> v = {string(args[0]), to_string(pid), (get_time())};
 	history.push_back(v);
 	
 	if(pid==0){
@@ -440,7 +441,7 @@ void CliTools::fileIO(char * args[], string in_file, string out_file) {
 
 void CliTools::fileIO(char * args[], string file, bool isOut) {
 	 
-	int err = -1;
+	int err = 1;
 	
 	int fileDescriptor; // between 0 and 19, describing the output or input file
 	
@@ -450,7 +451,7 @@ void CliTools::fileIO(char * args[], string file, bool isOut) {
 		cout << ("Child process could not be created\n");
 		return;
 	}
-	vector<string> v = {string(args[0]), to_string(pid)};
+	vector<string> v = {string(args[0]), to_string(pid), (get_time())};
 	history.push_back(v);
 	if(pid==0){
 		

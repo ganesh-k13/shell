@@ -76,6 +76,13 @@ void print_sgown(unordered_map <string, vector< pair<long, string> >> result) {
 	}
 }
 
+string get_time() {
+	auto end_time  = chrono::system_clock::to_time_t(chrono::system_clock::now());
+	string curr_time = (ctime(&end_time));
+	curr_time.erase(curr_time.length() - 1);
+	return curr_time;
+}
+
 #if 0
 void init(){
 

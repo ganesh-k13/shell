@@ -44,6 +44,8 @@ vector< pair<long, string> > search_file(string file_name, string query);
 unordered_map <string, vector< pair<long, string> >> sgown(string folder, string query);
 void print_sgown(unordered_map <string, vector< pair<long, string> >> result);
 
+string get_time();
+
 #if 0
 void init();
 // signal handler for SIGCHLD */
