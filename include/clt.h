@@ -27,6 +27,7 @@ namespace CliTools {
 
 	extern vector <vector<string>> history;
 	extern vector<string> header;
+	extern int bg_count;
 
 	struct prompt{
 		string PS1;
@@ -50,8 +51,8 @@ namespace CliTools {
 	
 	char **vect_to_cstr(vector<string> argv);
 	int command_handler(vector<string> argv, envp *e);
-	int execute(char** argv);
-	int execute(char** argv, envp *e);
+	int execute(char** argv, bool bg);
+	int execute(char** argv, envp *e, bool bg);
 	bool change_dir(string dir);
 	void print_history(vector <vector<string>> history);
 	void pipeHandler(char * args[]);

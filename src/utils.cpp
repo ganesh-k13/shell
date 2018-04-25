@@ -90,7 +90,12 @@ vector<string> locate(string folder, string query) {
 	return res;
 }
 
-void print_locate(vector<string> )
+void print_locate(vector<string> res) {
+	for(auto it : res) {
+		cout << it << endl;
+	}
+	return;
+}
 
 string get_time() {
 	auto end_time  = chrono::system_clock::to_time_t(chrono::system_clock::now());

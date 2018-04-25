@@ -3,6 +3,7 @@
 
 vector <vector<string>> CliTools::history;
 vector<string> CliTools::header = {"Command", "PID", "Time"};
+int bg_count;
 
 CliTools::prompt::prompt(initializer_list<string> list) {
 	
@@ -55,7 +56,7 @@ void CliTools::envp::__list_path() {
 	}
 }
 
-int CliTools::execute(char** argv) {
+int CliTools::execute(char** argv, bool bg = false) {
 	auto pid = fork();
 	int status = -1;
 	if(pid < 0) {
@@ -76,13 +77,16 @@ int CliTools::execute(char** argv) {
 		vector<string> v = {string(argv[0]), to_string(pid), get_time()};
 		history.push_back(v);
 		
-		waitpid(pid, &status, 0);
-		return status;
+		if(!bg) {
+			waitpid(pid, &status, 0);
+			return status;
+		}
+		
 	}
 	
 }
 
-int CliTools::execute(char** argv, envp *e) {
+int CliTools::execute(char** argv, envp *e, bool bg = false) {
 	
 	auto pid = fork();
 	int status = -1;
@@ -107,7 +111,10 @@ int CliTools::execute(char** argv, envp *e) {
 	else {
 		vector<string> v = {string(argv[0]), to_string(pid), (get_time())};
 		history.push_back(v);
-		waitpid(pid, &status, 0);
+		if(!bg) {
+			waitpid(pid, &status, 0);
+			return status;
+		}
 		// cout << "Exec: " << status << endl;
 		if(status != 0) {
 
@@ -232,7 +239,7 @@ int CliTools::command_handler(vector<string> argv, envp *e) {
 		}
 		
 		if(command == "locate") {
-			print_locate(sgown(argv[2], argv[1]));
+			print_locate(locate(argv[2], argv[1]));
 			return 0;
 		}
 		

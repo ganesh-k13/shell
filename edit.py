@@ -37,7 +37,10 @@ class ScrolledText(Frame):
 	def settext(self, text='', file=None):
 
 		if file: 
-			text = open(file, 'r').read()
+			try:
+				text = open(file, 'r').read()
+			except:
+				open(file, 'w'); text = ''
 		self.text.delete('1.0', END)				   
 		self.text.insert('1.0', text)				   
 		self.text.mark_set(INSERT, '1.0')			   
