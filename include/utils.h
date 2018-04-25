@@ -43,6 +43,7 @@ string welcome();
 vector< pair<long, string> > search_file(string file_name, string query);
 unordered_map <string, vector< pair<long, string> >> sgown(string folder, string query);
 void print_sgown(unordered_map <string, vector< pair<long, string> >> result);
+vector<string> locate(string folder, string query);
 
 string get_time();
 

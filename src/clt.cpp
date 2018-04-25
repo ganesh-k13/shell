@@ -101,6 +101,7 @@ int CliTools::execute(char** argv, envp *e) {
 				continue;
 			}
 		}
+		exit(1);
 	}
 
 	else {
@@ -144,26 +145,38 @@ bool CliTools::change_dir(string dir) {
 	return false;
 }
 
-void CliTools::print_history() {
+void CliTools::print_history(vector <vector<string>> history) {
 
 	stringstream  seperator;
 	stringstream  table_headings;
 	stringstream  data;
 	stringstream  table;
 	
-	const int atrribute_width = 25;
-	
+	vector <int> atrribute_width;
+	if(!history.size()) {
+		atrribute_width = vector <int>(header.size(), 10);
+	}
+	else {
+		for(auto it: history) {
+			int i = 0;
+			for(auto c : it)
+				atrribute_width.push_back(max(c.size()+2, header[i].length()+2));
+			break;
+		}
+	}
 	// cols = (*relation)->get_col_names().begin();
 	
+	int i = 0;
 	for(auto cols : header) {
-		seperator << setfill('-') << setw(1) << "+" << setw(atrribute_width) << "-";
+		seperator << setfill('-') << setw(1) << "+" << setw(atrribute_width[i++]) << "-";
 	}
 	seperator << setw(1) << "+" << endl << setfill(' ') << setw(1);
 	
 	table << seperator.str();
 	
+	i = 0;
 	for(auto cols : header) {
-		table_headings << "|" << setw(atrribute_width) << left << (cols) << setw(1) ;
+		table_headings << "|" << setw(atrribute_width[i++]) << left << (cols) << setw(1) ;
 	}
 	
 	table_headings << setw(1) << "|" << endl;
@@ -172,8 +185,9 @@ void CliTools::print_history() {
 	table << seperator.str();
 
 	for(auto it: history) {
+		i = 0;
 		for(auto c : it)
-			table << "|" << setw(atrribute_width) << left << c << setw(1) ;
+			table << "|" << setw(atrribute_width[i++]) << left << c << setw(1) ;
 		table << setw(1) << "|" << endl << seperator.str();
 	}
 	cout << table.str();
@@ -208,12 +222,17 @@ int CliTools::command_handler(vector<string> argv, envp *e) {
 		}
 
 		if(command == "history") {
-			print_history();
+			print_history(history);
 			return 0;
 		}
 		
 		if(command == "sgown") {
 			print_sgown(sgown(argv[2], argv[1]));
+			return 0;
+		}
+		
+		if(command == "locate") {
+			print_locate(sgown(argv[2], argv[1]));
 			return 0;
 		}
 		
@@ -250,12 +269,27 @@ int CliTools::open_editor(vector<string> argv) {
 	FILE* file;
     int argc = 2;
 	
-	Py_SetProgramName(arg_t[0]);
-    Py_Initialize();
-    PySys_SetArgv(argc, arg_t);
-    file = fopen(arg_t[0],"r");
-    PyRun_SimpleFile(file, arg_t[0]);
-    Py_Finalize();
+	auto pid = fork();
+	int status = -1;
+	if(pid < 0) {
+		return status;
+	}
+	
+	if(pid==0){
+		
+		// We set the child to ignore SIGINT signals (we want the parent
+		// process to handle them with signalHandler_int)	
+		signal(SIGINT, SIG_IGN);
+		Py_SetProgramName(arg_t[0]);
+		Py_Initialize();
+		PySys_SetArgv(argc, arg_t);
+		file = fopen(arg_t[0],"r");
+		PyRun_SimpleFile(file, arg_t[0]);
+		Py_Finalize();
+		exit(0);
+	}
+	vector<string> v = {string(argv[0]), to_string(pid), (get_time())};
+	history.push_back(v);	
 	
 	return 0;
 }

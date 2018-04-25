@@ -55,7 +55,7 @@ class SimpleEditor(ScrolledText):
 		Button(frm, text='Cut',	  command=self.onCut).pack(side=LEFT)
 		Button(frm, text='Paste', command=self.onPaste).pack(side=LEFT)
 		Button(frm, text='Find',  command=self.onFind).pack(side=LEFT)
-		Quitter(frm).pack(side=LEFT)
+		# Quitter(frm).pack(side=LEFT)
 		ScrolledText.__init__(self, parent, file=file) 
 		self.text.config(font=('courier', 9, 'normal'))
 

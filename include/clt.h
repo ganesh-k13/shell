@@ -53,7 +53,7 @@ namespace CliTools {
 	int execute(char** argv);
 	int execute(char** argv, envp *e);
 	bool change_dir(string dir);
-	void print_history();
+	void print_history(vector <vector<string>> history);
 	void pipeHandler(char * args[]);
 	void fileIO(char * args[], string in_file, string out_file);
 	void fileIO(char * args[], string file, bool isOut);

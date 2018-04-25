@@ -3,22 +3,24 @@
 string error_code_handle(int code) {
 	switch(code) {
 		case 0: {return "";}
+		case 139:
 		case 132: {return "Invalid Command!\n";}
 		case 512: {return "Invalid Usage!\n";}
+		default: {return "Error Code: " + to_string(code) + "\n";}
 	}
 }
 
 string welcome() {
 	stringstream out;
 
-	out << "|---------------------------------------|\n"
-		<< "|                SHELL                  |\n"
-		<< "|                                       |\n"
-		<< "|                 by                    |\n"
-		<< "|               Akhil M.                |\n"
-		<< "|               Ganesh K.               |\n"
-		<< "|               Rahul B.                |\n"
-		<< "|---------------------------------------|\n\n\n";
+	out << "                          |---------------------------------------|\n"
+		<< "                          |                SHELL                  |\n"
+		<< "                          |                                       |\n"
+		<< "                          |                 by                    |\n"
+		<< "                          |               Akhil M.                |\n"
+		<< "                          |               Ganesh K.               |\n"
+		<< "                          |               Rahul B.                |\n"
+		<< "                          |---------------------------------------|\n\n\n";
 
 	return out.str();
 } 
@@ -71,10 +73,24 @@ void print_sgown(unordered_map <string, vector< pair<long, string> >> result) {
 	for(auto res: result) {
 		cout << endl << ("\e[95m" + res.first + "\e[0m") << endl;
 		for(auto it: res.second) {
-			cout << it.first << " " << ("..." + it.second)<< endl;
+			cout << "\e[34m" + to_string(it.first) + "\e[0m" << " " << ("..." + it.second)<< endl;
 		}
 	}
 }
+
+vector<string> locate(string folder, string query) {
+	vector <string> res;
+	int offset;
+	for (fs::recursive_directory_iterator i(folder), end; i != end; ++i) {
+		if ((offset = string(i->path()).find(query, 0)) != string::npos) {
+			res.push_back(string(i->path()).insert(offset+query.length(), "\e[0m").insert(offset, "\e[31m"));
+		}
+	}
+	
+	return res;
+}
+
+void print_locate(vector<string> )
 
 string get_time() {
 	auto end_time  = chrono::system_clock::to_time_t(chrono::system_clock::now());
